@@ -7,7 +7,7 @@ use LWP::UserAgent;
 use HTML::Parser;                                                                                                                                                    
 use Data::Dump qw (dump);
 
-our $VERSION = '1.03'; 
+our $VERSION = '1.04'; 
 
 # $Id: $
 # $Log: INGDirect.pm,v $
@@ -20,20 +20,20 @@ Finance::Bank::INGDirect -  Check your "ING Direct France" accounts from Perl
 
 =head1 SYNOPSIS
 
-use Finance::Bank::INGDirect;
+  use Finance::Bank::INGDirect;
 
-my @accounts = Finance::Bank::INGDirect->check_balance(
-		ACN => "167845",
-		PIN => "1234",
-		JOUR => "25", # Day of birthday
-		MOIS => "8",  # month of birthday
-		ANNEE => "1952" # year of birthday
-		);
+  my @accounts = Finance::Bank::INGDirect->check_balance(
+  	  	 ACN => "167845",
+	  	 PIN => "1234",
+	  	 JOUR => "25", # Day of birthday
+	  	 MOIS => "8",  # month of birthday
+	  	 ANNEE => "1952" # year of birthday
+	  	 );
 
-foreach my $account (@accounts) {
-	print "Name: ", $account->name, " Account_no: ", $account->account_no, "\n", "*" x 80, "\n";
-	print $_->as_string, "\n" foreach $account->statements;
-}
+  foreach my $account (@accounts) {
+ 	 	print "Name: ", $account->name, " Account_no: ", $account->account_no, "\n", "*" x 80, "\n";
+		print $_->as_string, "\n" foreach $account->statements;
+  }
 
 =head1 DESCRIPTION
 
@@ -153,7 +153,7 @@ sub default_account {
 
 =pod
 
-=head2 check_balance(username => "0120123456L", password => "123456")
+=head2 check_balance( ACN => "167845", PIN => "1234", JOUR => "25", MOIS => "8", ANNEE => "1952"  feedback => sub { warn "Finance::Bank::INGDirect : $_[0]\n" })
 
 Return a list of account (F::B::INGDirect::Account) objects, one for each of
 your bank accounts.
@@ -172,26 +172,25 @@ use Data::Dump qw (dump);
 
 =head1 Account methods
 
-=head2 type()
+=head2 type( )
 
-	Returns the human-readable name of the account.
+Returns the human-readable name of the account.
 
-=head2 account_no()
+=head2 account_no( )
 
-	Return the account number, in the form C<0123456L012>.
+Return the account number, in the form C<0123456L012>.
 
-=head2 balance()
+=head2 balance( )
 
-	Returns the balance of the account.
+Returns the balance of the account.
 
-=head2 statements()
+=head2 statements( )
 
-	Return a list of Statement object (Finance::Bank::INGDirect::Statement).
+Return a list of Statement object (Finance::Bank::INGDirect::Statement).
 
-=head2 currency()
+=head2 currency( )
 
-	Returns the currency of the account as a three letter ISO code (EUR, CHF,
-			etc.).
+Returns the currency of the account as a three letter ISO code (EUR, CHF,etc.).
 
 =cut
 
@@ -249,26 +248,25 @@ package Finance::Bank::INGDirect::Statement;
 
 =head1 Statement methods
 
-=head2 date()
+=head2 date( )
 
-	Returns the date when the statement occured, in DD/MM/YY format.
+Returns the date when the statement occured, in DD/MM/YY format.
 
-=head2 description()
+=head2 description( )
 
-	Returns a brief description of the statement.
+Returns a brief description of the statement.
 
-=head2 amount()
+=head2 amount( )
 
-	Returns the amount of the statement (expressed in Euros or the account's
-			currency). Although the Crédit Mutuel website displays number in continental
-	format (i.e. with a coma as decimal separator), amount() returns a real
-	number.
+Returns the amount of the statement (expressed in Euros or the account's currency). 
+Although the Crédit Mutuel website displays number in continental
+format (i.e. with a coma as decimal separator), amount() returns a real number.
 
-=head2 as_string($separator)
+=head2 as_string( $separator )
 
-	Returns a tab-delimited representation of the statement. By default, it uses
-	a tabulation to separate the fields, but the user can provide its own
-	separator.
+Returns a tab-delimited representation of the statement. By default, it uses
+a tabulation to separate the fields, but the user can provide its own
+separator.
 
 =cut
 
@@ -300,11 +298,11 @@ can be redistributed under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-	Thanks to Pixel for Finance::Bank::LaPoste, Cédric Bouvier for Finance::Bank::CreditMut
+Thanks to Pixel for Finance::Bank::LaPoste, Cédric Bouvier for Finance::Bank::CreditMut
 (and also to Simon Cozens and Briac Pilpré for various Finance::Bank::*)
 
-	=head1 SEE ALSO
+=head1 SEE ALSO
 
-	Finance::Bank::BNPParibas, Finance::Bank::CreditMut, Finance::Bank::LaPoste, ...
+Finance::Bank::BNPParibas, Finance::Bank::CreditMut, Finance::Bank::LaPoste, ...
 
 =cut
