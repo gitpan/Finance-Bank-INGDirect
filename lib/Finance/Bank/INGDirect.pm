@@ -5,12 +5,18 @@ use Carp qw(carp croak);
 use HTTP::Cookies;                                                                                                                                                   
 use LWP::UserAgent;                                                                                                                                                  
 use HTML::Parser;                                                                                                                                                    
-use Data::Dump qw (dump);
+#use Data::Dump qw (dump);
 
-our $VERSION = '1.04'; 
+our $VERSION = '1.05'; 
 
-# $Id: $
+# $Id: INGDirect.pm,v 1.2 2005/12/16 22:30:20 jmrenouard Exp $
 # $Log: INGDirect.pm,v $
+# Revision 1.2  2005/12/16 22:30:20  jmrenouard
+# Modification tag TD empéchant la lecture des transactions
+#
+# Revision 1.1.1.1  2005/12/16 22:01:09  jmrenouard
+# Imported sources
+#
 
 =pod
 
@@ -89,6 +95,7 @@ sub _parse_content {
 			$type=$1;
 			$num=$2;
 			$f=1;
+		#	print "\n#Found : $type $num";
 		}
 	if ( $f && $1 =~ /class="Bleu11">(.*)<\/a><\/td>/) {
 		push ( @{$self->{Accounts}}, Finance::Bank::INGDirect::Account->new( $type, $num, $self->normalize_number($1), $self->{ua}, "$urlAccount$i" ));
@@ -237,8 +244,9 @@ sub normalize_number {
 sub _parse_content_account {
 	my ($self, $content)=@_;
 	#Parsing html content
-	while ( $content =~ /BgdTabOra\">(\d+\/\d+\/\d+)<\/td>(.|\n)+?Bleu11\">(.*?)<\/span>(.|\n)+?BgdTabOra" align="right">(.*?)<\/td>/g) {
-		push (@{$self->{statements}}, Finance::Bank::INGDirect::Statement->new ($1, $3, $self->normalize_number($5)));
+	while ( $content =~ /BgdTabOra\">(\d+\/\d+\/\d+)<\/TD>(.|\n)+?Bleu11\">(.*?)<\/span>(.|\n)+?BgdTabOra" align="right">(.*?)<\/TD>/g) {
+	#print "\n# $1 $3 $5";	
+	push (@{$self->{statements}}, Finance::Bank::INGDirect::Statement->new ($1, $3, $self->normalize_number($5)));
 	}	
 }
 
